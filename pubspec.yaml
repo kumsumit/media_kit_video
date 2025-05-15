@@ -1,0 +1,52 @@
+name: media_kit_video
+description: Native implementation for video playback in package:media_kit.
+homepage: https://github.com/media-kit/media-kit
+repository: https://github.com/media-kit/media-kit
+version: 1.2.5
+publish_to: none
+topics:
+  - video
+  - video-player
+  - audio
+  - audio-player
+  - cross-platform
+
+environment:
+  sdk: ">=3.7.0 <4.0.0"
+  flutter: ">=3.29.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  media_kit:
+    git: https://github.com/kumsumit/media_kit.git
+  synchronized: ^3.3.1
+  wakelock_plus:
+    git: https://github.com/kumsumit/wakelock_plus.git  
+  screen_brightness:
+    git: https://github.com/kumsumit/screen_brightness.git
+  volume_controller:
+    git: https://github.com/sumitsharansatsangi/volume_controller.git
+  universal_platform: ^1.1.0
+  plugin_platform_interface:
+    git: https://github.com/kumsumit/plugin_platform_interface.git
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+
+flutter:
+  plugin:
+    platforms:
+      windows:
+        pluginClass: MediaKitVideoPluginCApi
+      linux:
+        pluginClass: MediaKitVideoPlugin
+      macos:
+        pluginClass: MediaKitVideoPlugin
+      ios:
+        pluginClass: MediaKitVideoPlugin
+      android:
+        package: com.alexmercerind.media_kit_video
+        pluginClass: MediaKitVideoPlugin
+      web:
