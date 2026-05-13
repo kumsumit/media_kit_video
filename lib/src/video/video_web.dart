@@ -5,7 +5,7 @@
 /// Use of this source code is governed by MIT license that can be found in the LICENSE file.
 library;
 
-// ignore_for_file: avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:html';
 import 'dart:async';
 import 'package:flutter/widgets.dart';
@@ -349,6 +349,7 @@ class VideoState extends State<Video> with WidgetsBindingObserver {
     if (_disposeNotifiers) {
       _videoViewParametersNotifier.dispose();
       _contextNotifier.dispose();
+      // ignore: collection_methods_unrelated_type
       VideoStateInheritedWidgetContextNotifierState.fallback.remove(this);
     }
 

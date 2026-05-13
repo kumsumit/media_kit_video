@@ -31,7 +31,7 @@ Future<void> enterFullscreen(BuildContext context) {
         Navigator.of(context, rootNavigator: true).push(
           PageRouteBuilder(
             pageBuilder:
-                (_, __, ___) => Material(
+                (_, _, _) => Material(
                   child: VideoControlsThemeDataInjector(
                     // NOTE: Make various *VideoControlsThemeData from the parent context available in the fullscreen context.
                     context: context,

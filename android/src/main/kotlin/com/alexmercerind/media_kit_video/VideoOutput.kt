@@ -143,7 +143,7 @@ internal class VideoOutput(
     }
 
     private fun registerFrameListener() {
-        val listener = { _: android.graphics.SurfaceTexture ->
+        val listener: (android.graphics.SurfaceTexture) -> Unit = {
             synchronized(lock) {
                 try {
                     notifyFirstFrameRendered(includeTextureIds = false)
