@@ -4,8 +4,10 @@
 /// All rights reserved.
 /// Use of this source code is governed by MIT license that can be found in the LICENSE file.
 library;
+
 import 'dart:async';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:media_kit_video/src/video_controller/video_controller.dart';
@@ -15,6 +17,8 @@ import 'package:media_kit_video/src/video_controller/video_controller.dart';
 /// ------------
 ///
 /// [SubtitleView] widget is used to display the subtitles on top of the [Video].
+///
+/// {@endtemplate}
 class SubtitleView extends StatefulWidget {
   /// The [VideoController] reference to control this [SubtitleView] output.
   final VideoController controller;
@@ -48,12 +52,20 @@ class SubtitleViewState extends State<SubtitleView> {
 
   @override
   void initState() {
+    super.initState();
     subscription = widget.controller.player.stream.subtitle.listen((value) {
       setState(() {
         subtitle = value;
       });
     });
-    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant SubtitleView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.configuration.padding != widget.configuration.padding) {
+      padding = widget.configuration.padding;
+    }
   }
 
   @override
@@ -69,12 +81,8 @@ class SubtitleViewState extends State<SubtitleView> {
     EdgeInsets padding, {
     Duration duration = const Duration(milliseconds: 100),
   }) {
-    if (this.duration != duration) {
-      setState(() {
-        this.duration = duration;
-      });
-    }
     setState(() {
+      this.duration = duration;
       this.padding = padding;
     });
   }
@@ -82,18 +90,17 @@ class SubtitleViewState extends State<SubtitleView> {
   /// {@macro subtitle_view}
   @override
   Widget build(BuildContext context) {
-    padding = widget.configuration.padding;
+    if (!widget.configuration.visible) {
+      return const SizedBox.shrink();
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         // Calculate the visible text scale factor.
-        final textScaleFactor = widget.configuration.textScaleFactor ??
-            MediaQuery.of(context).textScaleFactor *
-                sqrt(
-                  ((constraints.maxWidth * constraints.maxHeight) /
-                          (kTextScaleFactorReferenceWidth *
-                              kTextScaleFactorReferenceHeight))
-                      .clamp(0.0, 1.0),
-                );
+        final textScaleFactor =
+            widget.configuration.textScaleFactor ??
+            MediaQuery.textScalerOf(context).scale(1.0) *
+                _visibleTextScaleMultiplier(constraints);
         return Material(
           color: Colors.transparent,
           child: AnimatedContainer(
@@ -107,12 +114,22 @@ class SubtitleViewState extends State<SubtitleView> {
               ].join('\n'),
               style: widget.configuration.style,
               textAlign: widget.configuration.textAlign,
-              textScaleFactor: textScaleFactor,
+              textScaler: TextScaler.linear(textScaleFactor),
             ),
           ),
         );
       },
     );
+  }
+
+  double _visibleTextScaleMultiplier(BoxConstraints constraints) {
+    if (!constraints.hasBoundedWidth || !constraints.hasBoundedHeight) {
+      return 1.0;
+    }
+    final area = constraints.maxWidth * constraints.maxHeight;
+    final referenceArea =
+        kTextScaleFactorReferenceWidth * kTextScaleFactorReferenceHeight;
+    return sqrt((area / referenceArea).clamp(0.0, 1.0));
   }
 }
 
@@ -152,11 +169,23 @@ class SubtitleViewConfiguration {
     ),
     this.textAlign = TextAlign.center,
     this.textScaleFactor,
-    this.padding = const EdgeInsets.fromLTRB(
-      16.0,
-      0.0,
-      16.0,
-      24.0,
-    ),
+    this.padding = const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
   });
+
+  /// Creates a copy of this [SubtitleViewConfiguration] with the given fields replaced by the non-null parameter values.
+  SubtitleViewConfiguration copyWith({
+    bool? visible,
+    TextStyle? style,
+    TextAlign? textAlign,
+    double? textScaleFactor,
+    EdgeInsets? padding,
+  }) {
+    return SubtitleViewConfiguration(
+      visible: visible ?? this.visible,
+      style: style ?? this.style,
+      textAlign: textAlign ?? this.textAlign,
+      textScaleFactor: textScaleFactor ?? this.textScaleFactor,
+      padding: padding ?? this.padding,
+    );
+  }
 }
