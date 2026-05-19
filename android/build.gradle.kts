@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    kotlin("android")
 }
 
 group = "com.alexmercerind.media_kit_video"
@@ -14,6 +14,7 @@ repositories {
 }
 
 android {
+
     namespace = "com.alexmercerind.media_kit_video"
 
     compileSdk = 37
