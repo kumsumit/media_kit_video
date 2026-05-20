@@ -1,1 +1,1 @@
-rootProject.name = 'media_kit_video'
+rootProject.name = "media_kit_video"

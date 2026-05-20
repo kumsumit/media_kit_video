@@ -31,6 +31,10 @@ android {
 }
 
 kotlin {
+
+    // JVM Toolchain (recommended for Kotlin 2.x)
+    jvmToolchain(21)
+
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
     }
