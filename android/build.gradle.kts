@@ -1,8 +1,6 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.library")
-    kotlin("android")
 }
 
 group = "com.alexmercerind.media_kit_video"
@@ -30,12 +28,3 @@ android {
     }
 }
 
-kotlin {
-
-    // JVM Toolchain (recommended for Kotlin 2.x)
-    jvmToolchain(21)
-
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
-    }
-}
